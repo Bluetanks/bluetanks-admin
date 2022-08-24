@@ -76,6 +76,7 @@ export default function User() {
 
   const {isLoading:loadingStations, data:allStations,
     refetch} = useQuery(['stations'], getTotalStations.totalStations,{
+      networkMode:"online"
   })
 
 
@@ -133,11 +134,13 @@ export default function User() {
   const handleFilterByName = (event) => {
     setFilterName(event.target.value);
   };
+  let filteredUsers = [];
+  let emptyRows;
+  if (!loadingStations && allStations) {
+     emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - allStations?.data?.stations.length) : 0;
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - allStations?.data?.stations.length) : 0;
-
-  const filteredUsers = applySortFilter(!loadingStations && allStations && allStations?.data?.stations, getComparator(order, orderBy), filterName);
-
+     filteredUsers = applySortFilter( allStations.data.stations, getComparator(order, orderBy), filterName);
+  }
   const isUserNotFound = filteredUsers.length === 0;
 
 
@@ -187,7 +190,7 @@ export default function User() {
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, name)} />
+
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
@@ -219,7 +222,7 @@ export default function User() {
                   )}
                 </TableBody>
 
-                {!loadingStations && !allStations && (
+                {!loadingStations && isUserNotFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -233,9 +236,9 @@ export default function User() {
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[5, 10, 25, 50]}
             component="div"
-            count={!loadingStations ? allStations && allStations?.data?.stations.length : 0}
+            count={allStations && allStations?.data?.stations.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
