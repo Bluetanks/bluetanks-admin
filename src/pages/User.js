@@ -16,7 +16,7 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination,
+  TablePagination, MenuItem, ListItemIcon, ListItemText,
 } from '@mui/material';
 // components
 import Page from '../components/Page';
@@ -206,7 +206,11 @@ export default function Users() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu />
+                          <MenuItem sx={{ color: 'text.error' }}>
+                            <ListItemIcon>
+                              <Iconify color={"#FF4842"} icon="eva:trash-fill" width={24} height={24} />
+                            </ListItemIcon>
+                          </MenuItem>
                         </TableCell>
                       </TableRow>
                     );
