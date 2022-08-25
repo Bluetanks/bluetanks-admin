@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 // @mui
-import {Stack, IconButton, InputAdornment, Snackbar, Switch, Typography, Slide, TextField} from '@mui/material';
+import {Stack, IconButton, InputAdornment, Snackbar, Slide,Switch, Typography , TextField} from '@mui/material';
 import {Alert, LoadingButton} from '@mui/lab';
 // components
 import Iconify from '../../../components/Iconify';
@@ -35,25 +35,12 @@ const formSchema = yup.object().shape({
 export default function StationForm() {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
 
     const RegisterSchema = Yup.object().shape({
         firstName: Yup.string().required('First name required'),
         lastName: Yup.string().required('Last name required'),
         email: Yup.string().email('Email must be a valid email address').required('Email is required'),
         password: Yup.string().required('Password is required'),
-    });
-
-    const defaultValues = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-    };
-
-    const methods = useForm({
-        resolver: yupResolver(RegisterSchema),
-        defaultValues,
     });
 
 
@@ -104,6 +91,7 @@ export default function StationForm() {
                 email,
                 phone
             })
+
 
             mutate(body)
         },

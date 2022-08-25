@@ -56,7 +56,7 @@ export const allStations = async () => {
 
 }
 
-export const addStation = async () => {
+export const addStation = async (body) => {
     const myHeaders = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${Token}`
@@ -66,10 +66,39 @@ export const addStation = async () => {
     const requestOptions = {
         method: 'POST',
         headers: myHeaders,
+        body
     };
 
     return Promise.race([
         fetch(`${baseURL}/stations`, requestOptions)
+            .then(response => response.json()),
+        new Promise((resolve, reject) => {
+            timeoutId = setTimeout(() => reject(new Error('Timeout')), 15000)
+
+            //  clearTimeout(timeoutId)
+        }).then(() => {
+            clearTimeout(timeoutId)
+        })
+
+    ])
+
+}
+
+export const editStation = async (id) => {
+    const myHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${Token}`
+    }
+    let timeoutId;
+
+    const requestOptions = {
+        method: 'PATCH',
+        headers: myHeaders,
+
+    };
+
+    return Promise.race([
+        fetch(`${baseURL}/stations/${id}`, requestOptions)
             .then(response => response.json()),
         new Promise((resolve, reject) => {
             timeoutId = setTimeout(() => reject(new Error('Timeout')), 15000)
