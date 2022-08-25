@@ -153,7 +153,7 @@ export default function User() {
           <Typography variant="h4" gutterBottom>
             Stations
           </Typography>
-          <Button variant="contained" component={RouterLink} to="#" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Button variant="contained" component={RouterLink} to="/dashboard/AddStation" startIcon={<Iconify icon="eva:plus-fill" />}>
             Add stations
           </Button>
         </Stack>
