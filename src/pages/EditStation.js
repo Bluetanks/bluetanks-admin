@@ -116,7 +116,9 @@ export default function EditStation() {
 
     const { errors, touched, values, handleChange, handleSubmit, getFieldProps } = formik;
 
+const deleteStation = () => {
 
+}
 
     return (
         <Page title="Register">
@@ -145,7 +147,15 @@ export default function EditStation() {
 
 
                 <Container>
+
                     <ContentStyle>
+                        <Stack width={"50%"}>
+
+                            <LoadingButton onClick={deleteStation} fullWidth size="medium" type="submit" color={"error"} variant="contained"
+                                           loading={isLoading}>
+                                Delete Stations
+                            </LoadingButton>
+                        </Stack>
                         <Typography variant="h4" gutterBottom>
                             Edit stations here
                         </Typography>
@@ -209,6 +219,8 @@ export default function EditStation() {
                                 </Stack>
                             </Form>
                         </FormikProvider>
+
+
                     </ContentStyle>
                 </Container>
             </RootStyle>

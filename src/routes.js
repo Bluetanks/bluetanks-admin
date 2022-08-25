@@ -14,6 +14,8 @@ import AddStation from "./pages/AddStation";
 import Stations from "./pages/Stations";
 import EditStation from "./pages/EditStation";
 import AddPort from "./pages/addPort";
+import AuthGuard from "./guards/AuthGuard";
+import GuestGuard from "./guards/GuestGuard";
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +23,9 @@ export default function Router() {
   return useRoutes([
     {
       path: '/dashboard',
-      element: <DashboardLayout />,
+      element:          <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>,
       children: [
         { path: 'app', element: <DashboardApp /> },
         { path: 'AddStation', element: <AddStation /> },
@@ -34,18 +38,11 @@ export default function Router() {
       ],
     },
     {
-      path: 'login',
-      element: <Login />,
-    },
-    {
-      path: 'register',
-      element: <Register />,
-    },
-    {
       path: '/',
-      element: <LogoOnlyLayout />,
+      element:<GuestGuard> <LogoOnlyLayout /> </GuestGuard>,
       children: [
-        { path: '/', element: <Navigate to="/dashboard/app" /> },
+        { path: '/', element: <Login /> },
+        { path: 'login', element: <Login /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],
