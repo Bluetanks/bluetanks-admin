@@ -13,6 +13,7 @@ import DashboardApp from './pages/DashboardApp';
 import AddStation from "./pages/AddStation";
 import Stations from "./pages/Stations";
 import EditStation from "./pages/EditStation";
+import AddPort from "./pages/addPort";
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ export default function Router() {
         { path: 'users', element: <Users /> },
         { path: 'stations', element: <Stations /> },
         { path: 'edit/:id', element: <EditStation /> },
+        { path: 'AddPort/:id', element: <AddPort /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> },
       ],

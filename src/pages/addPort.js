@@ -15,6 +15,7 @@ import { LoadingButton} from "@mui/lab";
 import {useMutation} from "@tanstack/react-query";
 import {addStation, editStation} from "../actions";
 import {useState} from "react";
+import * as yup from "yup";
 
 // ----------------------------------------------------------------------
 function TransitionRight(props) {
@@ -63,7 +64,17 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function EditStation() {
+
+const formSchema = yup.object().shape({
+
+    type: yup.string().required('Please provide port type'),
+    capacity: yup.string().required('Please provide port capacity'),
+
+
+});
+
+
+export default function AddPort() {
     const params = useParams()
 
     const smUp = useResponsive('up', 'sm');
@@ -80,7 +91,7 @@ export default function EditStation() {
         setOpen(false);
     };
 
-    const {isLoading, mutate,data:editData, error, isError, isSuccess,} = useMutation(['add-station'], editStation,{
+    const {isLoading, mutate,data:editData, error, isError, isSuccess,} = useMutation(['add-station-ports'], editStation,{
         onSuccess:(data)=>{
             console.log(data)
         },
@@ -88,25 +99,25 @@ export default function EditStation() {
             console.log(err)
         }
     })
-
+//console.log(editData)
 
 
 
     const formik = useFormik({
         initialValues: {
-            website: '',
-            email: "",
-            phone: ""
+            capacity: '',
+            type: "",
+
 
         },
-        validationSchema: null,
+        validationSchema: formSchema,
         onSubmit: (values) => {
-            const { website, email, phone} = values
+            const { type, capacity} = values
             const body = JSON.stringify({
 
-                website,
-                email,
-                phone
+                type,
+                capacity,
+
             })
 
 
@@ -147,7 +158,7 @@ export default function EditStation() {
                 <Container>
                     <ContentStyle>
                         <Typography variant="h4" gutterBottom>
-                            Edit stations here
+                            Add charging port for stations
                         </Typography>
 
 
@@ -160,47 +171,25 @@ export default function EditStation() {
 
                                     <TextField
                                         fullWidth
-                                        type="text"
-                                        label="Email"
-                                        {...getFieldProps('email')}
-                                        error={Boolean(touched.email && errors.email)}
-                                        helperText={touched.email && errors.email}
+                                        type="number"
+                                        label="Capacity"
+                                        {...getFieldProps('capacity')}
+                                        error={Boolean(touched.capacity && errors.capacity)}
+                                        helperText={touched.capacity && errors.capacity}
                                     />
 
 
                                     <TextField
                                         fullWidth
                                         type="text"
-                                        label="Website"
-                                        {...getFieldProps('website')}
-                                        error={Boolean(touched.website && errors.website)}
-                                        helperText={touched.website && errors.website}
-                                    />
-
-
-                                    <TextField
-                                        fullWidth
-                                        type="text"
-                                        label="Phone"
-                                        {...getFieldProps('phone')}
-                                        error={Boolean(touched.phone && errors.phone)}
-                                        helperText={touched.phone && errors.phone}
+                                        label="Type"
+                                        {...getFieldProps('type')}
+                                        error={Boolean(touched.type && errors.type)}
+                                        helperText={touched.type && errors.type}
                                     />
 
 
 
-
-
-
-
-                                    <Stack spacing={1} alignItems="center" flexDirection={"row"}>
-
-                                        <Typography variant="overline" sx={{color: 'text.secondary'}}>
-                                            Bi Directional
-                                        </Typography>
-                                        <Switch value={values.bidirectional} onChange={(e) => handleChange('bidirectional')(e)}
-                                                checked={values.bidirectional}/>
-                                    </Stack>
 
 
                                     <LoadingButton onClick={() => handleSubmit()} fullWidth size="large" type="submit" variant="contained" loading={isLoading}>

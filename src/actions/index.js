@@ -84,7 +84,7 @@ export const addStation = async (body) => {
 
 }
 
-export const editStation = async (id) => {
+export const editStation = async ({id, body}) => {
     const myHeaders = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${Token}`
@@ -94,7 +94,7 @@ export const editStation = async (id) => {
     const requestOptions = {
         method: 'PATCH',
         headers: myHeaders,
-
+body
     };
 
     return Promise.race([

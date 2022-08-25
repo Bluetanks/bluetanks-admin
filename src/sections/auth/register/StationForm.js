@@ -36,12 +36,6 @@ export default function StationForm() {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
 
-    const RegisterSchema = Yup.object().shape({
-        firstName: Yup.string().required('First name required'),
-        lastName: Yup.string().required('Last name required'),
-        email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-        password: Yup.string().required('Password is required'),
-    });
 
 
 

@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
 // component
 import Iconify from '../../../components/Iconify';
+import AddPort from "../../../pages/addPort";
 
 // ----------------------------------------------------------------------
 
@@ -27,12 +28,12 @@ export default function UserMoreMenu(id) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-    {/*    <MenuItem sx={{ color: 'text.secondary' }}>
+        <MenuItem component={RouterLink} to={`/dashboard/AddPort/${id.id}`} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
-            <Iconify icon="eva:trash-2-outline" width={24} height={24} />
+            <Iconify icon="eva:plus-circle-fill" width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>*/}
+          <ListItemText primary="Add port" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem>
 
         <MenuItem  component={RouterLink} to={`/dashboard/edit/${id.id}`} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
