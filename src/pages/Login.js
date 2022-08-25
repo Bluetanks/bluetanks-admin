@@ -1,7 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import {Card, Link, Container, Typography, Box} from '@mui/material';
+import {Card, Link, Container, Typography, Box, Snackbar, Alert, Slide} from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -11,6 +11,8 @@ import Page from '../components/Page';
 import { LoginForm } from '../sections/auth/login';
 import AuthSocial from '../sections/auth/AuthSocial';
 import Logo from "../assets/logo.png"
+import {useSelector} from "react-redux";
+import {useState} from "react";
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -55,8 +57,29 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 // ----------------------------------------------------------------------
-
+function TransitionRight(props) {
+  return <Slide {...props} direction="left" />;
+}
 export default function Login() {
+
+  const user = useSelector(state => state.user)
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const {
+    responseMessage,
+    responseState,
+    responseType,
+    isAuthenticated
+  } = user
+
   const smUp = useResponsive('up', 'sm');
 
   const mdUp = useResponsive('up', 'md');
@@ -64,12 +87,18 @@ export default function Login() {
   return (
     <Page title="Login">
       <RootStyle>
+
         <HeaderStyle>
           <Box sx={{ width: 40, height: 40 }}>
               <img src={Logo} alt="Bluetanks"/>
           </Box>
 
-
+          <Snackbar open={responseState} TransitionComponent={TransitionRight} anchorOrigin={{vertical:'bottom', horizontal:'right'}}
+                    autoHideDuration={3000} onClose={handleClose}>
+            <Alert onClose={handleClose} variant={"standard"} severity={responseType} sx={{ width: '100%' }}>
+              {responseMessage}
+            </Alert>
+          </Snackbar>
         </HeaderStyle>
 
         {mdUp && (

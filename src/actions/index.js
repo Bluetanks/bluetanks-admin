@@ -1,6 +1,7 @@
 const baseURL = 'https://bluetanks-api.herokuapp.com/api/v1';
 
-const Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliODE3NWYxZGViYzMwYWM2MmY5YWEiLCJlbWFpbCI6Im9yamlhY2VAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaXNWZXJpZmllZCI6dHJ1ZSwic3RhdHVzIjoiQUNUSVZFIiwiaWF0IjoxNjYxMzg3OTQzLCJleHAiOjE2NjkxNjM5NDN9.9sMdhbaB_6tI_5RaJ7VLExDvL2adTKbGmaXdVfBobQ0"
+
+const Token = JSON.parse(localStorage.getItem('Token'));
 
 export const getUsers = async () => {
     const myHeaders = {
@@ -144,4 +145,32 @@ export const getTotalStations = {
         ])
 
     }
+}
+
+
+export const signInUser = async (userdata) => {
+    const myHeaders = {
+        'Content-Type': 'application/json',
+    }
+    let timeoutId;
+
+    const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: userdata,
+    };
+
+    return Promise.race([
+        fetch(`${baseURL}/auth/login`, requestOptions)
+            .then(response => response.json()),
+        new Promise((resolve, reject) => {
+            timeoutId = setTimeout(() => reject(new Error('Timeout')), 15000)
+
+            //  clearTimeout(timeoutId)
+        }).then(() => {
+            clearTimeout(timeoutId)
+        })
+
+    ])
+
 }

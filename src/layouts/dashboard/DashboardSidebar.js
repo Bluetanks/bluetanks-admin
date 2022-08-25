@@ -3,18 +3,21 @@ import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
+import {Box, Link, Button, Drawer, Typography, Avatar, Stack, List} from '@mui/material';
 // mock
 import account from '../../_mock/account';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
-import Logo from '../../components/Logo';
+
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 //
 import navConfig from './NavConfig';
-
+import {getIcon} from "@iconify/react/dist/iconify";
+import {logoutUser} from "../../app/slices/userSlice";
+import {useDispatch, useSelector} from "react-redux";
+import Logo from "../../assets/logo.png"
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
@@ -42,10 +45,20 @@ DashboardSidebar.propTypes = {
 };
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
+
+  const dispatch = useDispatch()
+  const item =  {
+    title: 'Logout',
+    path: '/404',
+    icon: getIcon('eva:log-out-fill'),
+  }
   const { pathname } = useLocation();
-
+const user = useSelector(state => state.user)
+  const {userData:{
+    firstName
+  }} = user
   const isDesktop = useResponsive('up', 'lg');
-
+console.log(user)
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
@@ -60,17 +73,17 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-      <Box sx={{ px: 2.5, py: 3, display: 'inline-flex' }}>
-        <Logo />
+      <Box sx={{ width: 50, height: 50 }} width={100} height={60} alignItems={"center"} justifyContent={"center"}>
+
       </Box>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            <Avatar src={Logo} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                Bluetanks Admin
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {account.role}
@@ -81,7 +94,11 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       </Box>
 
       <NavSection navConfig={navConfig} />
-
+      <Box sx={{ mb: 5, mx: 2.5 }}>
+      <Button onClick={() => dispatch(logoutUser())} variant="contained">
+        Logout
+      </Button>
+      </Box>
       <Box sx={{ flexGrow: 1 }} />
 
       <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>

@@ -24,7 +24,8 @@ import {allStations, getUsers, stations} from "../actions";
 
 export default function DashboardApp() {
   const theme = useTheme();
-
+   /* const Token = JSON.parse(localStorage.getItem('Token'));
+    console.log(Token)*/
   const {isLoading, data:users} = useQuery(['users'], getUsers)
   const {isLoading:loadingStations, data:stations} = useQuery(['stations'], allStations)
 

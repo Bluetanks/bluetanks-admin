@@ -23,11 +23,7 @@ const navConfig = [
   },
 
 
-  {
-    title: 'Logout',
-    path: '/404',
-    icon: getIcon('eva:log-out-fill'),
-  },
+
 ];
 
 export default navConfig;

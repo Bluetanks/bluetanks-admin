@@ -10,7 +10,20 @@ const initialState = {
     responseState: false,
     responseMessage: '',
     responseType: '',
-
+    token:"",
+    userData: {
+        createdAt: null,
+        email: '',
+        country:'',
+        city:'',
+        emailVerified: false,
+        firstName: 'string',
+        lastName: '',
+        phone: null,
+        photoURL: null,
+        uid: '',
+        receiveNotification:false,
+    },
     tickers: []
 };
 
