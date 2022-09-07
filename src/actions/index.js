@@ -1,4 +1,4 @@
-const baseURL = 'https://bluetanks-api.herokuapp.com/api/v1';
+const baseURL = 'https://bluetanks-dev-api.herokuapp.com/api/v1';
 
 
 const Token = JSON.parse(localStorage.getItem('Token'));

@@ -10,6 +10,9 @@ import Logo from '../components/Logo';
 // sections
 import {StationForm} from '../sections/auth/register';
 import AuthSocial from '../sections/auth/AuthSocial';
+import {unSetResponse} from "../app/slices/userSlice";
+import {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
 
 // ----------------------------------------------------------------------
 
@@ -60,6 +63,33 @@ export default function AddStation() {
     const smUp = useResponsive('up', 'sm');
 
     const mdUp = useResponsive('up', 'md');
+    const dispatch = useDispatch()
+
+    const user = useSelector(state => state.user)
+    const {
+        responseMessage,
+        responseState,
+        responseType,
+        isAuthenticated
+    } = user
+    useEffect(() =>{
+        // console.log(user)
+        if (responseState || responseMessage) {
+
+
+            const time = setTimeout(() => {
+                dispatch(unSetResponse({
+                    responseState:false,
+                    responseMessage:''
+                }))
+            }, 3000)
+            return () => {
+                clearTimeout(time)
+            };
+        }
+
+    },[responseState,responseMessage])
+
 
     return (
         <Page title="Register">
@@ -75,14 +105,7 @@ export default function AddStation() {
                         </Typography>
 
                         <StationForm />
-                        {!smUp && (
-                            <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-                                Already have an account?{' '}
-                                <Link variant="subtitle2" to="/login" component={RouterLink}>
-                                    Login
-                                </Link>
-                            </Typography>
-                        )}
+
                     </ContentStyle>
                 </Container>
             </RootStyle>

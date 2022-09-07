@@ -5,7 +5,17 @@ import {useNavigate} from 'react-router-dom';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 // @mui
-import {Stack, IconButton, InputAdornment, Snackbar, Slide,Switch, Typography , TextField} from '@mui/material';
+import {
+    Stack,
+    IconButton,
+    InputAdornment,
+    Snackbar,
+    Slide,
+    Switch,
+    Typography,
+    TextField, List,
+
+} from '@mui/material';
 import {Alert, LoadingButton} from '@mui/lab';
 // components
 import Iconify from '../../../components/Iconify';
@@ -15,6 +25,13 @@ import * as yup from "yup";
 import {useMutation} from "@tanstack/react-query";
 import {addStation} from "../../../actions";
 // ----------------------------------------------------------------------
+
+import Autocomplete, {usePlacesWidget} from "react-google-autocomplete";
+
+import useGoogle from "react-google-autocomplete/lib/usePlacesAutocompleteService";
+
+
+
 
 function TransitionRight(props) {
     return <Slide {...props} direction="left" />;
@@ -70,8 +87,7 @@ export default function StationForm() {
             const body = JSON.stringify({
                 name,
                 "ports": [
-                    {"capacity": 2000, "type": "DC"},
-                    {"capacity": 2001, "type": "DC"}
+                    {"capacity": 2000, "type": "DC", label:"Port A"},
                 ],
                 longitude,
                 latitude,
@@ -89,10 +105,10 @@ export default function StationForm() {
         },
     });
 
-    const { errors, touched, values, handleChange, handleSubmit, getFieldProps } = formik;
+    const { errors, touched, values, handleChange, setFieldValue, handleSubmit, getFieldProps } = formik;
 
 
-
+    //console.log(values.address)
 
 
     const handleClose = (event, reason) => {
@@ -122,18 +138,44 @@ export default function StationForm() {
                         error={Boolean(touched.name && errors.name)}
                         helperText={touched.name && errors.name}
                     />
-                    <TextField
-                        fullWidth
-                        type="text"
-                        label="Location (Address)"
-                        {...getFieldProps('address')}
-                        error={Boolean(touched.address && errors.address)}
-                        helperText={touched.address && errors.address}
-                    />
 
-                 {/*   <RHFTextField name="address" label="Location (Address)" value={values.address}
-                                  onChange={(e) => handleChange('address')(e)}/>*/}
+                 {/*   <TextField
+                        fullWidth
+                        style={{ width: "250px", marginRight: "20px" }}
+                        color="secondary"
+                        variant="outlined"
+                        inputRef={ref}
+                        id="Address"
+                        name="address"
+                        placeholder="Address"
+                        onChange={handleChange}
+
+
+                    />*/}
+                    <Autocomplete
+                        style={{ width: "250px", borderRadius:10, border:"1px solid #ccc", padding:10, }}
+                        defaultValue={values.address}
+                        options={{
+                            types: ["(regions)"],
+
+                        }}
+
+                        placeholder="Address"
+                        onChange={(e)=>handleChange('address')(e.target.value)}
+                        apiKey={"AIzaSyCE71u7ryI37ySHtISd10smNBS9KsZU1hs"}
+                        onPlaceSelected={(place) => {
+                            setFieldValue("address", place.formatted_address)
+                          //  console.log(place);
+                            setFieldValue('latitude',place.geometry.location.lat())
+                            setFieldValue('longitude',place.geometry.location.lng())
+                                // console.log('Lat', place.geometry.location.lat())
+                            //console.log('Lng', place.geometry.location.lng())
+
+                        }}
+                    />
                 </Stack>
+
+
 
                 <TextField
                     fullWidth
@@ -145,7 +187,7 @@ export default function StationForm() {
                 />
 
 
-                <TextField
+               {/* <TextField
                     fullWidth
                     type="number"
                     label="Longitude"
@@ -162,7 +204,7 @@ export default function StationForm() {
                     {...getFieldProps('latitude')}
                     error={Boolean(touched.latitude && errors.latitude)}
                     helperText={touched.latitude && errors.latitude}
-                />
+                />*/}
 
                 <TextField
                     fullWidth

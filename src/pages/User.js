@@ -136,7 +136,7 @@ export default function Users() {
   };
   let filteredUsers = [];
   let emptyRows;
-  if (!isLoading && users) {
+  if (!isLoading && users && users.data) {
      emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users?.data?.users.length) : 0;
 
      filteredUsers = applySortFilter(users.data.users, getComparator(order, orderBy), filterName);
