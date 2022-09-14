@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import {Box, Link, Button, Drawer, Typography, Avatar, Stack, List} from '@mui/material';
+import {Box, Link, Button, Drawer, Typography, Avatar} from '@mui/material';
 // mock
 import account from '../../_mock/account';
 // hooks
@@ -58,7 +58,7 @@ const user = useSelector(state => state.user)
     firstName
   }} = user
   const isDesktop = useResponsive('up', 'lg');
-console.log(user)
+
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
@@ -95,7 +95,10 @@ console.log(user)
 
       <NavSection navConfig={navConfig} />
       <Box sx={{ mb: 5, mx: 2.5 }}>
-      <Button onClick={() => dispatch(logoutUser())} variant="contained">
+      <Button onClick={() => {
+        localStorage.setItem('admin-Token', JSON.stringify(''))
+        dispatch(logoutUser())
+      }} variant="contained">
         Logout
       </Button>
       </Box>

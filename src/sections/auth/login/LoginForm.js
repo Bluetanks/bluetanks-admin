@@ -66,7 +66,7 @@ const {isError, isLoading, mutate} = useMutation(['login-user'],signInUser,{
     onSuccess:(data)=>{
         if(data.success) {
 
-            localStorage.setItem('Token', JSON.stringify(data.data.token));
+            localStorage.setItem('admin-Token', JSON.stringify(data.data.token));
 
             dispatch(setUser(data.data))
             dispatch(setAuthenticated(true))

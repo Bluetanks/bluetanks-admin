@@ -13,7 +13,7 @@ import {
     Slide,
     Switch,
     Typography,
-    TextField, List,
+    TextField, List, FormControl, InputLabel, Select, MenuItem,
 
 } from '@mui/material';
 import {Alert, LoadingButton} from '@mui/lab';
@@ -29,6 +29,8 @@ import {addStation} from "../../../actions";
 import Autocomplete, {usePlacesWidget} from "react-google-autocomplete";
 
 import useGoogle from "react-google-autocomplete/lib/usePlacesAutocompleteService";
+import {setResponse} from "../../../app/slices/userSlice";
+import {useDispatch} from "react-redux";
 
 
 
@@ -39,12 +41,17 @@ function TransitionRight(props) {
 const formSchema = yup.object().shape({
 
     name: yup.string().required('Please provide station name'),
+    email: yup.string().required('Please provide station email'),
     address: yup.string().required('Please provide station location'),
     longitude: yup.string().required('Please provide station longitude'),
     latitude: yup.string().required('Please provide station latitude'),
     buyRate: yup.string().required('Please provide station Buy Rate'),
     sellRate: yup.string().required('Please provide station Sell Rate'),
     phone: yup.string().required('Please provide station phone number'),
+    capacity: yup.string().required('Please provide port capacity'),
+    type: yup.string().required('Please provide port type'),
+    label: yup.string().required('Please provide port label'),
+    source: yup.string().required('Please provide charging source'),
 
 });
 
@@ -53,10 +60,24 @@ export default function StationForm() {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
 
+const dispatch = useDispatch()
 
-
-    const {isLoading, mutate, error, isError} = useMutation(['add-station'], addStation,{
+    const {isLoading, mutate, error, isError} = useMutation(['add-charging-station'], addStation,{
         onSuccess:(data)=>{
+            if(data.success){
+                dispatch(setResponse({
+                    responseMessage:"Station Added!",
+                    responseType:"error",
+                    responseState:true
+                }))
+            }else{
+                dispatch(setResponse({
+                    responseMessage:data.error.message,
+                    responseType:"error",
+                    responseState:true
+                }))
+            }
+
             console.log(data)
         },
         onError:(err)=>{
@@ -78,16 +99,19 @@ export default function StationForm() {
             source: "",
             bidirectional: false,
             email: "",
-            phone: ""
+            phone: "",
+            capacity:'',
+            type:'',
+            label:''
 
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
-            const {name, longitude, address, latitude, buyRate, sellRate, source, bidirectional, email, phone} = values
+            const {name, longitude, address, latitude,buyRate, sellRate, source, bidirectional, email, phone, capacity,label, type} = values
             const body = JSON.stringify({
                 name,
                 "ports": [
-                    {"capacity": 2000, "type": "DC", label:"Port A"},
+                    {capacity, type, label},
                 ],
                 longitude,
                 latitude,
@@ -122,12 +146,7 @@ export default function StationForm() {
     return (
         <FormikProvider value={formik}>
             <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-            <Snackbar open={isError} TransitionComponent={TransitionRight} anchorOrigin={{vertical:'bottom', horizontal:'right'}}
-                      autoHideDuration={3000} onClose={handleClose}>
-                <Alert onClose={handleClose} variant={"standard"} severity={"info"} sx={{ width: '100%' }}>
-                    {isError  &&error.message}
-                </Alert>
-            </Snackbar>
+
             <Stack spacing={3}>
                 <Stack direction={{xs: 'column', sm: 'row'}} spacing={2}>
                     <TextField
@@ -153,6 +172,7 @@ export default function StationForm() {
 
                     />*/}
                     <Autocomplete
+
                         style={{ width: "250px", borderRadius:10, border:"1px solid #ccc", padding:10, }}
                         defaultValue={values.address}
                         options={{
@@ -187,24 +207,6 @@ export default function StationForm() {
                 />
 
 
-               {/* <TextField
-                    fullWidth
-                    type="number"
-                    label="Longitude"
-                    {...getFieldProps('longitude')}
-                    error={Boolean(touched.longitude && errors.longitude)}
-                    helperText={touched.longitude && errors.longitude}
-                />
-
-
-                <TextField
-                    fullWidth
-                    type="number"
-                    label="Latitude"
-                    {...getFieldProps('latitude')}
-                    error={Boolean(touched.latitude && errors.latitude)}
-                    helperText={touched.latitude && errors.latitude}
-                />*/}
 
                 <TextField
                     fullWidth
@@ -224,14 +226,33 @@ export default function StationForm() {
                     helperText={touched.sellRate && errors.sellRate}
                 />
 
-                <TextField
+             {/*   <TextField
                     fullWidth
                     type="text"
                     label="Source"
                     {...getFieldProps('source')}
                     error={Boolean(touched.source && errors.source)}
                     helperText={touched.source && errors.source}
-                />
+                />*/}
+
+                <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Charging source</InputLabel>
+                    <Select
+                        error={Boolean(touched.source && errors.source)}
+                        helperText={touched.source && errors.source}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={values.source}
+                        label="Charge status"
+                        {...getFieldProps('source')}
+
+                        required>
+                        <MenuItem value="AC">AC</MenuItem>
+                        <MenuItem value="DC">DC</MenuItem>
+
+                    </Select>
+
+                </FormControl>
 
                 <TextField
                     fullWidth
@@ -243,7 +264,32 @@ export default function StationForm() {
                 />
 
 
+                <TextField
+                    fullWidth
+                    type="text"
+                    label="Port label"
+                    {...getFieldProps('label')}
+                    error={Boolean(touched.label && errors.label)}
+                    helperText={touched.label && errors.label}
+                />
+ <TextField
+                    fullWidth
+                    type="number"
+                    label="Port Capacity"
+                    {...getFieldProps('capacity')}
+                    error={Boolean(touched.capacity && errors.capacity)}
+                    helperText={touched.capacity && errors.capacity}
+                />
 
+
+                <TextField
+                    fullWidth
+                    type="text"
+                    label="Port Type"
+                    {...getFieldProps('type')}
+                    error={Boolean(touched.type && errors.type)}
+                    helperText={touched.type && errors.type}
+                />
 
 
                 <Stack spacing={1} alignItems="center" flexDirection={"row"}>

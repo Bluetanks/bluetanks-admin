@@ -1,7 +1,7 @@
 const baseURL = 'https://bluetanks-dev-api.herokuapp.com/api/v1';
 
 
-const Token = JSON.parse(localStorage.getItem('Token'));
+const Token = JSON.parse(localStorage.getItem('admin-Token'));
 
 export const getUsers = async () => {
     const myHeaders = {

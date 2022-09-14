@@ -78,7 +78,7 @@ export default function Users() {
 
   const {isLoading, data:users} = useQuery(['users'], getUsers)
 
- //console.log(users)
+ console.log(users)
 
   const [page, setPage] = useState(0);
 

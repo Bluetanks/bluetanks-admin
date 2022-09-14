@@ -1,7 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Link,Switch, Container, Typography } from '@mui/material';
+import {Card, Link, Switch, Container, Typography, Snackbar, Alert, Slide} from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -11,7 +11,7 @@ import Logo from '../components/Logo';
 import {StationForm} from '../sections/auth/register';
 import AuthSocial from '../sections/auth/AuthSocial';
 import {unSetResponse} from "../app/slices/userSlice";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 // ----------------------------------------------------------------------
@@ -38,14 +38,6 @@ const HeaderStyle = styled('header')(({ theme }) => ({
     },
 }));
 
-const SectionStyle = styled(Card)(({ theme }) => ({
-    width: '100%',
-    maxWidth: 464,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    margin: theme.spacing(2, 0, 2, 2),
-}));
 
 const ContentStyle = styled('div')(({ theme }) => ({
     maxWidth: 480,
@@ -59,9 +51,14 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
+
+
+function TransitionRight(props) {
+    return <Slide {...props} direction="left" />;
+}
 export default function AddStation() {
     const smUp = useResponsive('up', 'sm');
-
+    const [open, setOpen] = useState(false);
     const mdUp = useResponsive('up', 'md');
     const dispatch = useDispatch()
 
@@ -90,12 +87,23 @@ export default function AddStation() {
 
     },[responseState,responseMessage])
 
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
 
+        setOpen(false);
+    };
     return (
         <Page title="Register">
             <RootStyle>
 
-
+                <Snackbar open={responseState} TransitionComponent={TransitionRight} anchorOrigin={{vertical:'bottom', horizontal:'right'}}
+                          autoHideDuration={3000} onClose={handleClose}>
+                    <Alert onClose={handleClose} variant={"standard"} severity={responseType} sx={{ width: '100%' }}>
+                        {responseMessage}
+                    </Alert>
+                </Snackbar>
 
 
                 <Container>
